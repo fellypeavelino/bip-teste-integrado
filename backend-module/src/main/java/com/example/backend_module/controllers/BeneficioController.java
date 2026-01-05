@@ -1,0 +1,18 @@
+package com.example.backend_module.controllers;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/beneficios")
+public class BeneficioController {
+
+    @GetMapping
+    public List<String> list() {
+        return Arrays.asList("Beneficio A", "Beneficio B");
+    }
+}
