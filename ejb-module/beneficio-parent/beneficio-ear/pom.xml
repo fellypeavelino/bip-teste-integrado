@@ -1,5 +1,4 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
-
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -19,9 +18,16 @@
             <type>ejb</type>
         </dependency>
 
-        <dependency>
+        <!-- dependency>
             <groupId>com.example</groupId>
             <artifactId>beneficio-web</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependenc -->
+        
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>beneficio-web2</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -33,23 +39,34 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
                 <version>3.3.0</version>
-
                 <configuration>
+                    <version>10</version>
+                    <!-- Forçar nomes consistentes -->
                     <modules>
+                        <!-- webModule>
+                            <groupId>com.example</groupId>
+                            <artifactId>beneficio-web</artifactId>
+                            
+                            <bundleFileName>beneficio-web.war</bundleFileName>
+                            
+                            <contextRoot>/beneficio</contextRoot>
+                        </webModule -->
+                        <webModule>
+                            <groupId>com.example</groupId>
+                            <artifactId>beneficio-web2</artifactId>
+                            <bundleFileName>beneficio-web2.war</bundleFileName>
+                            <contextRoot>/beneficio</contextRoot>
+                        </webModule>
                         <ejbModule>
                             <groupId>com.example</groupId>
                             <artifactId>beneficio-ejb</artifactId>
+                            <bundleFileName>beneficio-ejb.jar</bundleFileName>
                         </ejbModule>
-
-                        <webModule>
-                            <groupId>com.example</groupId>
-                            <artifactId>beneficio-web</artifactId>
-                            <contextRoot>/beneficio</contextRoot>
-                        </webModule>
                     </modules>
+                    <!-- Desabilitar processamento de JARs desnecessários -->
+                    <unpackTypes>war</unpackTypes>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

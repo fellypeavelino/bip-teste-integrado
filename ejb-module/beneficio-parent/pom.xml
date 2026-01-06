@@ -10,6 +10,7 @@
         <module>beneficio-ejb</module>
         <module>beneficio-web</module>
         <module>beneficio-ear</module>
+        <module>beneficio-web2</module>
     </modules>
 
     <properties>
