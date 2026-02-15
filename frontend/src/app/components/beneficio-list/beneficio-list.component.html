@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  <h2>Lista de Benefícios</h2>
+  
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <div class="mb-3">
+    <a routerLink="/beneficios/novo" class="btn btn-primary">Novo Benefício</a>
+    <a routerLink="/transferir" class="btn btn-success ms-2">Transferir</a>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <table *ngIf="!loading" class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let beneficio of beneficios">
+        <td>{{ beneficio.id }}</td>
+        <td>{{ beneficio.nome }}</td>
+        <td>{{ beneficio.descricao }}</td>
+        <td>R$ {{ beneficio.valor | number:'1.2-2' }}</td>
+        <td>
+          <span class="badge" [ngClass]="beneficio.ativo ? 'bg-success' : 'bg-secondary'">
+            {{ beneficio.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+        <td>
+          <a [routerLink]="['/beneficios/editar', beneficio.id]" class="btn btn-warning btn-sm me-1">Editar</a>
+          <button (click)="deleteBeneficio(beneficio.id!)" class="btn btn-danger btn-sm">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && beneficios.length === 0" class="alert alert-info">
+    Nenhum benefício cadastrado.
+  </div>
+</div>

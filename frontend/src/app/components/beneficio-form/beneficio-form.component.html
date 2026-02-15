@@ -1,0 +1,80 @@
+<div class="container mt-4">
+  <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Benefício</h2>
+  
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null"></button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #beneficioForm="ngForm">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome *</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="nome" 
+        name="nome"
+        [(ngModel)]="beneficio.nome" 
+        required 
+        maxlength="100"
+        #nome="ngModel">
+      <div *ngIf="nome.invalid && nome.touched" class="text-danger">
+        Nome é obrigatório
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="descricao" class="form-label">Descrição</label>
+      <textarea 
+        class="form-control" 
+        id="descricao" 
+        name="descricao"
+        [(ngModel)]="beneficio.descricao" 
+        rows="3"
+        maxlength="255"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="valor" class="form-label">Valor *</label>
+      <input 
+        type="number" 
+        class="form-control" 
+        id="valor" 
+        name="valor"
+        [(ngModel)]="beneficio.valor" 
+        required 
+        min="0"
+        step="0.01"
+        #valor="ngModel">
+      <div *ngIf="valor.invalid && valor.touched" class="text-danger">
+        Valor é obrigatório e deve ser maior ou igual a zero
+      </div>
+    </div>
+
+    <div class="mb-3 form-check" *ngIf="isEditMode">
+      <input 
+        type="checkbox" 
+        class="form-check-input" 
+        id="ativo" 
+        name="ativo"
+        [(ngModel)]="beneficio.ativo">
+      <label class="form-check-label" for="ativo">Ativo</label>
+    </div>
+
+    <div class="mb-3">
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        [disabled]="beneficioForm.invalid || loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+        {{ isEditMode ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <a routerLink="/" class="btn btn-secondary ms-2">Cancelar</a>
+    </div>
+  </form>
+</div>
