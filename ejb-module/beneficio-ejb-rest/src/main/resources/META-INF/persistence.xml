@@ -10,11 +10,12 @@
 
         <class>com.example.entity.Beneficio</class>
 
-        <!-- <properties>
-            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+        <properties>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.sql-load-script-source" value="META-INF/load.sql"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-        </properties> -->
+        </properties>
     </persistence-unit>
 
 </persistence>
