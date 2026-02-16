@@ -6,6 +6,8 @@ import com.example.backend_module.repositories.BeneficioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -23,10 +25,26 @@ public class BeneficioService {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private EjbIntegrationService ejbIntegrationService;
+
     public Beneficio criar(Beneficio beneficio) {
         beneficio.setAtivo(true);
         beneficio.setVersion(0L);
-        return beneficioRepository.save(beneficio);
+        Beneficio salvo = beneficioRepository.save(beneficio);
+        
+        Long id = salvo.getId();
+        String descricao = salvo.getDescricao() != null ? salvo.getDescricao() : salvo.getNome();
+        BigDecimal valor = salvo.getValor();
+        
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                ejbIntegrationService.sincronizarCriacao(id, descricao, valor);
+            }
+        });
+        
+        return salvo;
     }
 
     public Beneficio buscarPorId(Long id) {
@@ -50,12 +68,31 @@ public class BeneficioService {
         beneficio.setValor(beneficioAtualizado.getValor());
         beneficio.setAtivo(beneficioAtualizado.getAtivo());
         
-        return beneficioRepository.save(beneficio);
+        Beneficio salvo = beneficioRepository.save(beneficio);
+        
+        String descricao = salvo.getDescricao() != null ? salvo.getDescricao() : salvo.getNome();
+        BigDecimal valor = salvo.getValor();
+        
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                ejbIntegrationService.sincronizarAtualizacao(id, descricao, valor);
+            }
+        });
+        
+        return salvo;
     }
 
     public void deletar(Long id) {
         Beneficio beneficio = buscarPorId(id);
         beneficioRepository.delete(beneficio);
+        
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                ejbIntegrationService.sincronizarRemocao(id);
+            }
+        });
     }
 
     @Transactional

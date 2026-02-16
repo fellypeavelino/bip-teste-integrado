@@ -24,7 +24,7 @@ spring:
       path: /h2-console
   sql:
     init:
-      mode: always
+      mode: never
 
 # Configuração do EJB REST
 ejb:
